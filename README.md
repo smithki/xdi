@@ -1,6 +1,8 @@
 # `xdi` monorepo
 
-> Bare-bones dependency injection using TypeScript decorators. Absolutely no frills.
+- **Bare-bones dependency injection using TypeScript decorators.** Absolutely no frills.
+- **<1kb bundled & compressed** (including React bindings).
+- **One decorator that does just one thing, in exactly one way.**
 
 | Package                       | Description |
 | ----------------------------- | ----------- |

@@ -1,0 +1,33 @@
+{
+  "name": "@xdi/react",
+  "version": "0.1.0",
+  "description": "React bindings for \"xdi\" (no-frills dependency injection).",
+  "files": [
+    "./.melodist"
+  ],
+  "main": "./.melodist/cjs/index.js",
+  "module": "./.melodist/esm/index.js",
+  "types": "./.melodist/types/index.d.ts",
+  "exports": {
+    "import": "./.melodist/esm/index.mjs",
+    "require": "./.melodist/cjs/index.js"
+  },
+  "scripts": {
+    "dev": "melodist dev",
+    "build": "melodist build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "xdi": "*"
+  },
+  "devDependencies": {
+    "@internal/config": "*",
+    "@types/react": "~18.0.20",
+    "melodist": "~0.7.9",
+    "react": "~18.2.0"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  }
+}

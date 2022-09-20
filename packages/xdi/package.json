@@ -1,6 +1,7 @@
 {
   "name": "xdi",
   "version": "0.1.0",
+  "description": "Bare-bones dependency injection using TypeScript decorators. Absolutely no frills.",
   "main": "./.melodist/cjs/index.js",
   "module": "./.melodist/esm/index.js",
   "types": "./.melodist/types/index.d.ts",

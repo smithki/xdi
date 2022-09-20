@@ -1,0 +1,21 @@
+{
+  "name": "xdi",
+  "version": "0.1.0",
+  "main": "./.melodist/cjs/index.js",
+  "module": "./.melodist/esm/index.js",
+  "types": "./.melodist/types/index.d.ts",
+  "exports": {
+    "import": "./.melodist/esm/index.mjs",
+    "require": "./.melodist/cjs/index.js"
+  },
+  "scripts": {
+    "dev": "melodist dev",
+    "build": "melodist build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@internal/config": "*",
+    "melodist": "~0.7.9"
+  }
+}

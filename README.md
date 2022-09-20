@@ -11,13 +11,24 @@
 
 ## ⚡️ Quick Start
 
-1. Install
+1. Install:
 
    ```zsh
    npm install xdi
    ```
 
-2. Make your DI container.
+2. Configure TypeScript `experimentalDecorators`:
+
+   ```js
+   // tsconfig.json
+   {
+     "compilerOptions": {
+       "experimentalDecorators": true,
+     }
+   }
+   ```
+
+3. Make your DI container:
 
    ```ts
    // src/services/container.ts
@@ -26,7 +37,7 @@
    export const { Inject, ...container } = createContainer();
    ```
 
-3. Write your services!
+4. Write your services:
 
    ```ts
    import { Inject } from 'src/services/container';

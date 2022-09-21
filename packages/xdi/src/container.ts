@@ -9,11 +9,20 @@ export function createContainer(containerOptions: ContainerOptions = {}): Contai
   const container: Container = {
     Inject(token, options) {
       return () => {
+        let cached: any;
+
         return {
           configurable: false,
           enumerable: true,
-          writable: false,
-          value: container.get(token(), options),
+          get() {
+            if (cached) {
+              return cached;
+            }
+
+            const inst = container.get(token(), options);
+            cached = inst;
+            return inst;
+          },
         };
       };
     },

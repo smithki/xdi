@@ -3,7 +3,7 @@
 - **Bare-bones dependency injection using TypeScript decorators.** Absolutely no frills.
 - **<1kb bundled & compressed** (including React bindings).
 - **One decorator that does just one thing, in exactly one way.**
-- **Direct upgrade path to ES2022 decorators.**
+- **Planned upgrade path to ES2022 decorators.**
 
 | Package                       | Description |
 | ----------------------------- | ----------- |
@@ -37,13 +37,13 @@
    // src/services/container.ts
    import { createContainer } from 'xdi';
 
-   export const { Inject, ...container } = createContainer();
+   export const { inject, ...container } = createContainer();
    ```
 
 4. Write your services:
 
    ```ts
-   import { Inject } from 'src/services/container';
+   import { inject } from 'src/services/container';
 
    export class MyService {
      sayHello(fullName: string) {
@@ -52,7 +52,7 @@
    }
 
    export class MyConsumer {
-     @Inject(() => MyService) private readonly svc: MyService;
+     @inject(() => MyService) private readonly svc!: MyService;
 
      sayName(firstName: string, lastName: string) {
        this.svc.sayHello(`${firstName} ${lastName}`);

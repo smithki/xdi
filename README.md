@@ -3,6 +3,7 @@
 - **Bare-bones dependency injection using TypeScript decorators.** Absolutely no frills.
 - **<1kb bundled & compressed** (including React bindings).
 - **One decorator that does just one thing, in exactly one way.**
+- **Direct upgrade path to ES2022 decorators.**
 
 | Package                       | Description |
 | ----------------------------- | ----------- |

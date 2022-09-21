@@ -15,7 +15,7 @@ export interface ContainerOptions {
 }
 
 export interface Container {
-  Inject: InjectDecorator;
+  inject: InjectDecorator;
 
   /**
    * Gets a service instance designated by `token`.

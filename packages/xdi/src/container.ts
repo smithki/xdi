@@ -7,7 +7,7 @@ export function createContainer(containerOptions: ContainerOptions = {}): Contai
   const tokenBoundCreators = new Map<any, any>();
 
   const container: Container = {
-    Inject(token, options) {
+    inject(token, options) {
       return () => {
         let cached: any;
 

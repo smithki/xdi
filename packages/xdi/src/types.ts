@@ -1,13 +1,9 @@
 export type Token<T> = (new () => T) | (() => T);
 
-export type ResolutionScope = 'singleton' | 'transient';
+export type ResolutionScope = 'global' | 'transient';
 
 export interface ResolutionOptions {
   scope?: ResolutionScope;
-}
-
-export interface ResolutionOptionsInternal extends ResolutionOptions {
-  _transientContext: any;
 }
 
 export interface InjectDecorator {

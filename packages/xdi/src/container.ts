@@ -1,12 +1,10 @@
-import type { Container, ContainerOptions, ResolutionOptionsInternal, Token } from './types';
+import type { Container, ContainerOptions, Token } from './types';
 
 export function createContainer(containerOptions: ContainerOptions = {}): Container {
-  const { defaultScope = 'singleton' } = containerOptions;
+  const { defaultScope = 'global' } = containerOptions;
 
-  const singletonRegistry = new Map<Token<any>, any>();
-  const transientRegistry = new Map<any, any>();
-  const transientCreators = new Map<any, any>();
-  const transientTokensRebound = new Set<any>();
+  const globalRegistry = new Map<Token<any>, any>();
+  const tokenBoundCreators = new Map<any, any>();
 
   const container: Container = {
     Inject(token, options) {
@@ -14,73 +12,49 @@ export function createContainer(containerOptions: ContainerOptions = {}): Contai
         return {
           configurable: false,
           enumerable: true,
-          get() {
-            if (options?.scope === 'transient') {
-              (options as ResolutionOptionsInternal)._transientContext = this;
-            }
-
-            return container.get(token(), options);
-          },
+          writable: false,
+          value: container.get(token(), options),
         };
       };
     },
 
     get(token, options = {}) {
-      const { scope = defaultScope, _transientContext } = options as ResolutionOptionsInternal;
+      const { scope = defaultScope } = options;
 
-      // --- Resolve singleton instance --- //
-
-      if (scope === 'singleton') {
-        if (singletonRegistry.has(token)) {
-          return singletonRegistry.get(token);
-        }
-
-        // eslint-disable-next-line new-cap
-        const inst = isConstructor(token) ? new token() : token();
-        singletonRegistry.set(token, inst);
-        return inst;
-      }
-
-      // --- Resolve transient instance --- //
-
-      if (!transientTokensRebound.has(token) && !!_transientContext) {
-        if (transientRegistry.has(_transientContext)) {
-          return transientRegistry.get(_transientContext);
+      if (scope === 'global') {
+        if (globalRegistry.has(token)) {
+          return globalRegistry.get(token);
         }
       }
 
-      // eslint-disable-next-line new-cap
-      const Creator = transientCreators.get(token) || token;
+      const Creator = tokenBoundCreators.get(token) || token;
       const inst = isConstructor(Creator) ? new Creator() : Creator();
-      if (_transientContext) {
-        transientRegistry.set(_transientContext, inst);
+
+      if (scope === 'global') {
+        globalRegistry.set(token, inst);
       }
-      transientTokensRebound.delete(token);
+
       return inst;
     },
 
     bind(token, Creator) {
       const inst = isConstructor(Creator) ? new Creator() : Creator();
-      singletonRegistry.set(token, inst);
-      transientCreators.set(token, Creator);
-      transientTokensRebound.add(token);
+      globalRegistry.set(token, inst);
+      tokenBoundCreators.set(token, Creator);
       return inst;
     },
 
     unbind(token) {
       // eslint-disable-next-line new-cap
       const inst = isConstructor(token) ? new token() : token();
-      singletonRegistry.set(token, inst);
-      transientCreators.delete(token);
-      transientTokensRebound.delete(token);
+      globalRegistry.set(token, inst);
+      tokenBoundCreators.delete(token);
       return inst;
     },
 
     reset() {
-      singletonRegistry.clear();
-      transientRegistry.clear();
-      transientCreators.clear();
-      transientTokensRebound.clear();
+      globalRegistry.clear();
+      tokenBoundCreators.clear();
     },
   };
 

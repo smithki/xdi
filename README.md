@@ -2,8 +2,9 @@
 
 - **Bare-bones dependency injection using TypeScript decorators.** Absolutely no frills.
 - **<1kb bundled & compressed** (including React bindings).
-- **One decorator that does just one thing, in exactly one way.**
-- **Planned upgrade path to ES2022 decorators.**
+- **Two field decorators: `@inject` and `@inject.lazy`.** No complicated dependency graph.
+- **Supports `global` and `transient`-scoped dependencies.**
+- **Direct upgrade path to [ES decorators](https://github.com/tc39/proposal-decorators).**
 
 | Package                       | Description |
 | ----------------------------- | ----------- |
@@ -52,7 +53,12 @@
    }
 
    export class MyConsumer {
+     // Injected upon instantiation
      @inject(() => MyService) private readonly svc!: MyService;
+
+     // Injected upon usage
+     // (this will change to use auto-accessors when ES decorators land)
+     @inject.lazy(() => MyService) private readonly svc!: MyService;
 
      sayName(firstName: string, lastName: string) {
        this.svc.sayHello(`${firstName} ${lastName}`);

@@ -1,4 +1,4 @@
-import type { Container, ContainerOptions, Token } from './types';
+import type { Container, ContainerOptions, InjectDecorator, Token } from './types';
 
 export function createContainer(containerOptions: ContainerOptions = {}): Container {
   const { defaultScope = 'global' } = containerOptions;
@@ -6,26 +6,36 @@ export function createContainer(containerOptions: ContainerOptions = {}): Contai
   const globalRegistry = new Map<Token<any>, any>();
   const tokenBoundCreators = new Map<any, any>();
 
-  const container: Container = {
-    inject(token, options) {
-      return () => {
-        let cached: any;
-
-        return {
-          configurable: false,
-          enumerable: true,
-          get() {
-            if (cached) {
-              return cached;
-            }
-
-            const inst = container.get(token(), options);
-            cached = inst;
-            return inst;
-          },
-        };
+  const injectField: InjectDecorator = (token, options) => {
+    return () => {
+      return {
+        configurable: false,
+        enumerable: true,
+        value: container.get(token(), options),
       };
-    },
+    };
+  };
+
+  const injectAccessor: InjectDecorator = (token, options) => {
+    return () => {
+      let cached: any;
+      return {
+        configurable: false,
+        enumerable: true,
+        get() {
+          if (cached) {
+            return cached;
+          }
+          const inst = container.get(token(), options);
+          cached = inst;
+          return inst;
+        },
+      };
+    };
+  };
+
+  const container: Container = {
+    inject: Object.assign(injectField, { lazy: injectAccessor }),
 
     get(token, options = {}) {
       const { scope = defaultScope } = options;

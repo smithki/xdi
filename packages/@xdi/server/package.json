@@ -1,0 +1,13 @@
+{
+  "name": "@xdi/server",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@internal/config": "*"
+  }
+}

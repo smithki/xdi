@@ -3,15 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "workspaces": [
-    "packages/@internal/*",
     "packages/@xdi/*",
     "packages/xdi"
   ],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
-    "lint:fix": "turbo run lint:fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "clean": "run-s --silent --print-label clean:*",
     "clean:workspaces": "turbo run clean",
     "clean:node_modules": "rimraf **/node_modules",

@@ -14,15 +14,13 @@
   },
   "scripts": {
     "dev": "melodist dev",
-    "build": "melodist build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "build": "melodist build"
   },
   "dependencies": {
     "xdi": "*"
   },
   "devDependencies": {
-    "@internal/config": "*",
+    "@xdi/tsconfig": "*",
     "@types/react": "~18.0.20",
     "melodist": "~0.7.9",
     "react": "~18.2.0"

@@ -1,6 +1,0 @@
-{
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@internal/config/tsconfig/node-library.json",
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
-}

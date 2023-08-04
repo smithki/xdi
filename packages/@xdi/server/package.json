@@ -4,10 +4,7 @@
   "private": true,
   "main": "src/index.ts",
   "types": "src/index.ts",
-  "scripts": {
-    "lint": "eslint ."
-  },
   "devDependencies": {
-    "@internal/config": "*"
+    "@xdi/tsconfig": "*"
   }
 }

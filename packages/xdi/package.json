@@ -14,12 +14,10 @@
   },
   "scripts": {
     "dev": "melodist dev",
-    "build": "melodist build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "build": "melodist build"
   },
   "devDependencies": {
-    "@internal/config": "*",
+    "@xdi/tsconfig": "*",
     "melodist": "~0.7.9"
   }
 }

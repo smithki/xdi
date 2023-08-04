@@ -4,8 +4,6 @@ interface Context {
   url: string;
 }
 
-const Next = Symbol('Next');
-
 function createApp(...args: any[]): any {}
 function createRouter(...args: any[]): any {}
 
@@ -37,16 +35,15 @@ function middleware(...args: any[]): ClassDecorator {
   return () => {};
 }
 
-// TODO: is this a good workaround?
-function useConnectMiddleware(...args: any[]): ClassDecorator {
+function withConnectMiddleware(...args: any[]): ClassDecorator {
   return () => {};
 }
 
-function useMiddleware(...args: any[]): ClassDecorator {
+function withMiddleware(...args: any[]): ClassDecorator {
   return () => {};
 }
 
-function useMiddlewareContext(...args: any[]): PropertyDecorator {
+function middlewareContext(...args: any[]): PropertyDecorator {
   return () => {};
 }
 
@@ -68,18 +65,18 @@ class AuthMiddleware {
 
   @handler()
   protected checkAuth() {
-    return Next;
+    // returning "undefined" == "next()"
   }
 }
 
-@useConnectMiddleware([bodyparser])
-@useMiddleware([AuthMiddleware])
+@withConnectMiddleware([bodyparser])
+@withMiddleware([AuthMiddleware])
 @route('PUT', '/hello/:id')
 class UpdateResource {
   @context()
   ctx!: Context;
 
-  @useMiddlewareContext(AuthMiddleware)
+  @middlewareContext(AuthMiddleware)
   auth!: AuthMiddleware;
 
   @param()
@@ -88,7 +85,7 @@ class UpdateResource {
   @query()
   helloOne!: string;
 
-  @query({ multiple: true, required: true, validate: (raw: string[]) => raw.length > 1 })
+  @query({ multiple: true, required: false, validate: (raw: string[]) => raw.length > 1 })
   helloTwo?: string[];
 
   @body()
@@ -104,13 +101,25 @@ class UpdateResource {
 }
 
 export const controller = createRouter([UpdateResource], {
-  useConnectMiddleware: [bodyparser],
-  useMiddleware: [AuthMiddleware],
+  withConnectMiddleware: [bodyparser],
+  withMiddleware: [AuthMiddleware],
 });
 
 export const app = createApp([controller], {
-  useConnectMiddleware: [bodyparser],
-  useMiddleware: [AuthMiddleware],
+  withConnectMiddleware: [bodyparser],
+  withMiddleware: [AuthMiddleware],
 });
 
 app.listen(3000);
+
+// --- Notes ---------------------------------------------------------------- //
+/*
+
+Lifecycle of an HTTP request:
+1. Match URL to registered route patterns - decide which route will handle the request
+2. Instantiate route instance & middleware instances
+3. Collect query params and URL params; perform validations
+4. Run middlewares; stop early if any middleware returns a `Response` instance or throws an error
+5. Return response at the end of a flow.
+
+*/

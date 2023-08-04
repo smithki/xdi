@@ -6,16 +6,6 @@
       "outputs": ["dist/**", ".melodist/**"]
     },
 
-    "lint": {
-      "outputs": [],
-      "cache": false
-    },
-
-    "lint:fix": {
-      "outputs": [],
-      "cache": false
-    },
-
     "dev": {
       "cache": false
     },

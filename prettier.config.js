@@ -1,4 +1,3 @@
-/* eslint-disable global-require */
 module.exports = {
   printWidth: 120,
   tabWidth: 2,

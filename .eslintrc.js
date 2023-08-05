@@ -33,6 +33,7 @@ const typescriptRules = {
   // Disable TypeScript rules that are too strict, too opinionated, or just noisy...
   '@typescript-eslint/ban-types': 'off',
   '@typescript-eslint/no-redeclare': 'off',
+  '@typescript-eslint/no-namespace': 'off',
   '@typescript-eslint/ban-ts-comment': 'off',
   '@typescript-eslint/no-unsafe-call': 'off',
   '@typescript-eslint/no-unused-vars': 'off',

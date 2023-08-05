@@ -10,8 +10,7 @@
 | ----------------------------- | ----------- |
 | [`xdi`](./packages/xdi)       | The meat-and-potatoes of `xdi`. This is what you `npm install` & use. |
 | [`@xdi/react`](./packages/@xdi/react) | React bindings for `xdi` (i.e.: `useService(...)`). |
-| [`@internal/config`](./packages/@internal/config) | Shared toolchains (i.e.: TypeScript, ESLint, etc.). |
-| [`@internal/tools`](./packages/@internal/tools) | Internal CLI tool for automating common tasks. |
+| [`@xdi/tsconfig`](./packages/@xdi/tsconfig) | Shared TypeScript configurations. |
 
 ## ⚡️ Quick Start
 

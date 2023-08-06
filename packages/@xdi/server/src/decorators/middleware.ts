@@ -1,6 +1,18 @@
+import { Metadata } from '../metadata';
+
+export class MiddlewareMetadata extends Metadata<{
+  foo: string;
+}> {}
+
 /**
  *
  */
-export function middleware(...args: any[]): ClassDecorator {
-  return () => {};
+export function middleware(): ClassDecorator {
+  return (target) => {
+    Metadata.register(
+      new MiddlewareMetadata(target, {
+        foo: 'bar',
+      }),
+    );
+  };
 }

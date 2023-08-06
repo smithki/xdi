@@ -1,19 +1,19 @@
 // Adapters
 export type { ServerAdapter } from './adapters/base';
-export * from './adapters/express';
+export { expressAdapter } from './adapters/express';
 
 // Decorators
-export * from './decorators/body';
-export * from './decorators/context';
-export * from './decorators/handler';
-export * from './decorators/middleware';
-export * from './decorators/middleware-context';
-export * from './decorators/on';
-export * from './decorators/param';
-export * from './decorators/query';
-export * from './decorators/route';
-export * from './decorators/with-connect-middleware';
-export * from './decorators/with-middleware';
+export { body } from './decorators/body';
+export { context } from './decorators/context';
+export { handler } from './decorators/handler';
+export { middleware } from './decorators/middleware';
+export { middlewareContext } from './decorators/middleware-context';
+export { on } from './decorators/on';
+export { param } from './decorators/param';
+export { query } from './decorators/query';
+export { route } from './decorators/route';
+export { withConnectMiddleware } from './decorators/with-connect-middleware';
+export { withMiddleware } from './decorators/with-middleware';
 
-//
-export * from './app';
+// Core
+export { App, Router } from './app';

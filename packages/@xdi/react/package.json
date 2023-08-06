@@ -14,7 +14,8 @@
   },
   "scripts": {
     "dev": "melodist dev",
-    "build": "melodist build"
+    "build": "melodist build",
+    "clean": "rimraf .melodist .turbo"
   },
   "dependencies": {
     "xdi": "*"

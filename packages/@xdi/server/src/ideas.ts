@@ -93,7 +93,7 @@ class UpdateResource {
 
   @handler()
   protected async doUpdate() {
-    return new Response('hello world');
+    // return new Response('hello world');
   }
 
   @on('sent')

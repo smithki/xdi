@@ -3,7 +3,8 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".melodist/**"]
+      "outputs": [".melodist/**"],
+      "inputs": ["src/**"]
     },
 
     "dev": {
@@ -18,5 +19,5 @@
       "cache": false
     }
   },
-  "globalDependencies": ["$NODE_ENV"]
+  "globalEnv": ["NODE_ENV"]
 }

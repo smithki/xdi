@@ -14,7 +14,8 @@
   },
   "scripts": {
     "dev": "melodist dev --platform node",
-    "build": "melodist build --platform node"
+    "build": "melodist build --platform node",
+    "clean": "rimraf .melodist .turbo"
   },
   "devDependencies": {
     "@remix-run/web-fetch": "4.3.6",

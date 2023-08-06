@@ -1,40 +1,73 @@
-export class Metadata<Value> {
-  private static _subjects = new Map<any, MetadataRegistry<any>>();
+export namespace Metadata {
+  export type Constructor<M extends Metadata = Metadata> = new (...args: any[]) => M;
+  export type Subject = any;
+  export type SubjectRegistry = Map<Subject, MetadataRegistry<Subject>>;
+  export type Container = Map<Constructor, Metadata[]>;
+}
 
-  constructor(public readonly subject: any, public readonly value: Value) {}
+/**
+ *
+ */
+export abstract class Metadata<Value = any> {
+  private static _subjects: Metadata.SubjectRegistry = new Map();
+
+  constructor(public readonly subject: Metadata.Subject, public readonly value: Value) {}
 
   /**
    *
    */
-  public static register<M extends Metadata<any>>(metadata: M) {
-    const metadataType = Object.getPrototypeOf(metadata).constructor as new () => Metadata<any>;
+  public static register<M extends Metadata>(metadata: M) {
+    const metadataType = Metadata.getType(metadata);
+    Metadata.getRegistryForSubject(metadata.subject).get(metadataType).push(metadata);
+  }
 
-    if (!Metadata._subjects.has(metadata.subject)) {
-      const registry = new MetadataRegistry<Metadata<any>>(metadata.subject);
-      registry.get(metadataType).push(metadata);
-      Metadata._subjects.set(metadata.subject, registry);
+  /**
+   *
+   */
+  public static registerOne<M extends Metadata>(metadata: M) {
+    const metadataType = Metadata.getType(metadata);
+    const metadataCollection = Metadata.getRegistryForSubject(metadata.subject).get(metadataType);
+    if (metadataCollection.length === 0) {
+      metadataCollection.push(metadata);
     } else {
-      Metadata._subjects.get(metadata.subject)?.get(metadataType).push(metadata);
+      // TODO: throw an error...
     }
+  }
+
+  /**
+   *
+   */
+  public static getType<M extends Metadata>(metadata: M): Metadata.Constructor<M> {
+    return Object.getPrototypeOf(metadata).constructor as Metadata.Constructor<M>;
   }
 
   /**
    *
    */
   public static getRegistryForSubject<S>(subject: S) {
-    return Metadata._subjects.get(subject);
+    if (!Metadata._subjects.has(subject)) {
+      const registry = new MetadataRegistry(subject);
+      Metadata._subjects.set(subject, registry);
+    }
+    return Metadata._subjects.get(subject)!;
   }
 }
 
-class MetadataRegistry<Subject> {
-  private _registry = new Map<new (...args: any[]) => Metadata<any>, Metadata<any>[]>();
+/**
+ *
+ */
+class MetadataRegistry<Subject = Metadata.Subject> {
+  private _state: Metadata.Container = new Map();
 
   constructor(public readonly subject: Subject) {}
 
-  get<M extends Metadata<any>>(metadataType: new (...args: any[]) => M): M[] {
-    if (!this._registry.has(metadataType)) {
-      this._registry.set(metadataType, []);
+  /**
+   *
+   */
+  get<M extends Metadata>(metadataType: Metadata.Constructor<M>): M[] {
+    if (!this._state.has(metadataType)) {
+      this._state.set(metadataType, []);
     }
-    return this._registry.get(metadataType)! as M[];
+    return this._state.get(metadataType)! as M[];
   }
 }

@@ -18,7 +18,7 @@ export abstract class Metadata<Value = any> {
    */
   public static register<M extends Metadata>(metadata: M) {
     const metadataType = Metadata.getType(metadata);
-    Metadata.getRegistryForSubject(metadata.subject).get(metadataType).push(metadata);
+    Metadata.getRegistry(metadata.subject).get(metadataType).push(metadata);
   }
 
   /**
@@ -26,7 +26,7 @@ export abstract class Metadata<Value = any> {
    */
   public static registerOne<M extends Metadata>(metadata: M) {
     const metadataType = Metadata.getType(metadata);
-    const metadataCollection = Metadata.getRegistryForSubject(metadata.subject).get(metadataType);
+    const metadataCollection = Metadata.getRegistry(metadata.subject).get(metadataType);
     if (metadataCollection.length === 0) {
       metadataCollection.push(metadata);
     } else {
@@ -44,7 +44,7 @@ export abstract class Metadata<Value = any> {
   /**
    *
    */
-  public static getRegistryForSubject<S>(subject: S) {
+  public static getRegistry<S>(subject: S) {
     if (!Metadata._subjects.has(subject)) {
       const registry = new MetadataRegistry(subject);
       Metadata._subjects.set(subject, registry);

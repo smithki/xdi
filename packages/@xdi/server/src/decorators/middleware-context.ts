@@ -1,6 +1,6 @@
 /**
  *
  */
-function middlewareContext(...args: any[]): PropertyDecorator {
+export function middlewareContext(...args: any[]): PropertyDecorator {
   return () => {};
 }

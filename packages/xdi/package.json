@@ -17,7 +17,6 @@
     "build": "melodist build"
   },
   "devDependencies": {
-    "@xdi/tsconfig": "*",
-    "melodist": "~0.7.9"
+    "@xdi/tsconfig": "*"
   }
 }

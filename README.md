@@ -12,6 +12,10 @@
 | [`@xdi/react`](./packages/@xdi/react) | React bindings for `xdi` (i.e.: `useService(...)`). |
 | [`@xdi/tsconfig`](./packages/@xdi/tsconfig) | Shared TypeScript configurations. |
 
+| Example                       | Description |
+| ----------------------------- | ----------- |
+| [`server`](./example/server)  | Work-in-progress "hello world" for `@xdi/server`. |
+
 ## ⚡️ Quick Start
 
 1. Install:

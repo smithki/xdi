@@ -1,6 +1,6 @@
 /**
  *
  */
-function body(...args: any[]): PropertyDecorator {
+export function body(...args: any[]): PropertyDecorator {
   return () => {};
 }

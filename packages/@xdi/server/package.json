@@ -1,9 +1,21 @@
 {
   "name": "@xdi/server",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "files": [
+    "./.melodist"
+  ],
+  "main": "./.melodist/cjs/index.js",
+  "module": "./.melodist/esm/index.js",
+  "types": "./.melodist/types/index.d.ts",
+  "exports": {
+    "import": "./.melodist/esm/index.mjs",
+    "require": "./.melodist/cjs/index.js"
+  },
+  "scripts": {
+    "dev": "melodist dev --platform node",
+    "build": "melodist build --platform node"
+  },
   "devDependencies": {
     "@remix-run/web-fetch": "4.3.6",
     "@remix-run/web-file": "3.0.3",

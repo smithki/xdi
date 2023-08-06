@@ -1,5 +1,9 @@
+import type { ServerAdapter } from './adapters/base';
+
 export namespace App {
-  export interface Options extends RouterOptions {}
+  export interface Options extends RouterOptions {
+    adapter: ServerAdapter;
+  }
 
   export interface RouterOptions {
     withConnectMiddleware: any[];
@@ -10,9 +14,9 @@ export namespace App {
 }
 
 export class App {
-  constructor(routers: Router[], options?: App.Options) {}
+  constructor(private readonly routers: Router[], private readonly options?: App.Options) {}
 }
 
 export class Router {
-  constructor(routes: App.Route[], options?: App.RouterOptions) {}
+  constructor(private readonly routes: App.Route[], private readonly options?: App.RouterOptions) {}
 }

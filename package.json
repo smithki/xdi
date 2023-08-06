@@ -4,17 +4,18 @@
   "private": true,
   "workspaces": [
     "packages/@xdi/*",
-    "packages/xdi"
+    "packages/xdi",
+    "examples/*"
   ],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
+    "example:server": "ts-node --project ./examples/server/tsconfig.json ./examples/server/index.ts ",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "clean": "run-s --silent --print-label clean:*",
     "clean:workspaces": "turbo run clean",
     "clean:node_modules": "rimraf **/node_modules",
-    "tools:plop": "npx @internal/tools",
     "prepare": "husky install",
     "commit": "cz",
     "commit:retry": "cz --retry"
@@ -47,5 +48,8 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "packageManager": "npm@8.12.1"
+  "packageManager": "npm@8.12.1",
+  "dependencies": {
+    "melodist": "~0.10.5"
+  }
 }

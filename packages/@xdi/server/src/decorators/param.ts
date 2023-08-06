@@ -1,6 +1,6 @@
 /**
  *
  */
-function param(...args: any[]): PropertyDecorator {
+export function param(...args: any[]): PropertyDecorator {
   return () => {};
 }

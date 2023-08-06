@@ -1,6 +1,6 @@
 /**
  *
  */
-function middleware(...args: any[]): ClassDecorator {
+export function middleware(...args: any[]): ClassDecorator {
   return () => {};
 }

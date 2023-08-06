@@ -1,6 +1,6 @@
 /**
  *
  */
-function withMiddleware(...args: any[]): ClassDecorator {
+export function withMiddleware(...args: any[]): ClassDecorator {
   return () => {};
 }

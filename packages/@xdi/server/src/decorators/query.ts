@@ -1,6 +1,6 @@
 /**
  *
  */
-function query(...args: any[]): PropertyDecorator {
+export function query(...args: any[]): PropertyDecorator {
   return () => {};
 }

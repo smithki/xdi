@@ -1,5 +1,5 @@
 import { expressAdapter } from '@xdi/adapter-express';
-import { route, App, Router, middleware } from '@xdi/server';
+import { route, App, Router, middleware, handler } from '@xdi/server';
 
 console.log('@xdi/example-server');
 
@@ -10,12 +10,16 @@ class FooRoute {}
 
 @middleware()
 @route('GET', '/hello-world')
-class BarRoute {}
+class BarRoute {
+  @handler()
+  bar() {
+    console.log('YOLO');
+  }
+}
 
 const router = new Router([FooRoute, BarRoute]);
 
-const app = new App([router], {
-  adapter: expressAdapter,
+expressAdapter().then((adapter) => {
+  const app = new App([router], { adapter });
+  app.listen(3000);
 });
-
-app.listen(3000);

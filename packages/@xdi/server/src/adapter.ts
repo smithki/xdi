@@ -1,7 +1,3 @@
-import type { fetch, FormData, Headers, Request, Response } from '@remix-run/web-fetch';
-import type { File, Blob } from '@remix-run/web-file';
-import type { AbortController } from 'abort-controller';
-
 import type { App } from './app';
 
 export namespace ServerAdapter {

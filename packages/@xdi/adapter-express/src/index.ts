@@ -18,12 +18,12 @@ export async function expressAdapter(): Promise<ServerAdapter> {
     global,
 
     implementations: {
-      fetch,
+      fetch: fetch as any,
       FormData,
-      Headers,
-      Request,
-      Response,
-      AbortController: (global.AbortController as typeof NodeAbortController) || NodeAbortController,
+      Headers: Headers as any,
+      Request: Request as any,
+      Response: Response as any,
+      AbortController: (global.AbortController || NodeAbortController) as any,
 
       File,
       Blob,

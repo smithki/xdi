@@ -1,7 +1,10 @@
+/* eslint-disable new-cap */
+
 import { exitAfterCleanup, addCleanupListener, removeCleanupListener } from 'async-cleanup';
 import * as pathToRegExp from 'path-to-regexp';
 
 import type { ServerAdapter } from './adapter';
+import { HandlerMetadata } from './decorators/handler';
 import { RouteMetadata } from './decorators/route';
 import { Metadata } from './metadata';
 import { HTTPMethod } from './types';
@@ -67,7 +70,14 @@ export class App {
     request: InstanceType<ServerAdapter.Implementations['Request']>,
     route: App.Route,
   ): Promise<InstanceType<ServerAdapter.Implementations['Response']>> {
-    // TODO...
+    // TODO: instantiate middleware
+
+    const routeInstance = new route();
+
+    const handlerMetadata = Metadata.getRegistry(route).get(HandlerMetadata)[0]?.value;
+    routeInstance[handlerMetadata.handlerKey]?.();
+    // TODO: throw error if `handlerKey` is undefined
+
     return {} as any;
   }
 }
@@ -75,7 +85,8 @@ export class App {
 export class Router {
   constructor(private readonly routes: App.Route[], private readonly options?: App.RouterOptions) {
     this.routes.forEach((route) => {
-      console.log(Metadata.getRegistry(route).get(RouteMetadata));
+      console.log('RouteMetadata:', Metadata.getRegistry(route).get(RouteMetadata));
+      console.log('HandlerMetadata:', Metadata.getRegistry(route).get(HandlerMetadata));
     });
   }
 

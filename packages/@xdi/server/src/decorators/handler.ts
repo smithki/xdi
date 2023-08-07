@@ -9,7 +9,7 @@ export class HandlerMetadata extends Metadata<{
  */
 export function handler(): MethodDecorator {
   return (target, propertyKey) => {
-    const subject = Object.getPrototypeOf(target).constructor;
+    const subject = target.constructor;
     Metadata.register(
       new HandlerMetadata(subject, {
         handlerKey: propertyKey,

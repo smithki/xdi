@@ -5,7 +5,7 @@ export { expressAdapter } from './adapters/express';
 // Decorators
 export { body } from './decorators/body';
 export { context } from './decorators/context';
-export { handler } from './decorators/handler';
+export { handler, HandlerMetadata } from './decorators/handler';
 export { middleware, MiddlewareMetadata } from './decorators/middleware';
 export { middlewareContext } from './decorators/middleware-context';
 export { on } from './decorators/on';

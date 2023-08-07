@@ -16,3 +16,5 @@ const router = new Router([FooRoute, BarRoute]);
 const app = new App([router], {
   adapter: expressAdapter,
 });
+
+app.start(3000);

@@ -2,7 +2,8 @@ import type { Server } from 'http';
 
 import type express from 'express';
 
-import { ServerAdapter } from './base';
+import type { ServerAdapter } from './base';
+import type { HTTPMethod } from '../types';
 
 export async function expressAdapter(): Promise<ServerAdapter> {
   const { fetch, FormData, Headers, Request, Response } = await import('@remix-run/web-fetch');
@@ -31,12 +32,19 @@ export async function expressAdapter(): Promise<ServerAdapter> {
       },
     },
 
-    async listen(port) {
+    async listen(port, app) {
       const express = (await import('express')).default;
-      const app = express();
+      const expressApp = express();
 
-      app.use(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      expressApp.use(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
         try {
+          const matchedRoute = app.match(req.method as HTTPMethod, req.url);
+          if (matchedRoute) {
+            res.status(200).send(`Hello world ${req.method} ${req.url}`);
+          } else {
+            res.status(404).send('Not found');
+          }
+
           // TODO: implement...
           // @see https://github.com/remix-run/remix/blob/main/packages/remix-express/server.ts
           // let request = createRemixRequest(req, res);
@@ -55,7 +63,7 @@ export async function expressAdapter(): Promise<ServerAdapter> {
 
       let server: Server;
       await new Promise<void>((resolve) => {
-        server = app.listen(port, resolve);
+        server = expressApp.listen(port, resolve);
       });
 
       return async () => {

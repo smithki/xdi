@@ -1,6 +1,6 @@
 /**
  *
  */
-export function on(...args: any[]): PropertyDecorator {
+export function on(...args: any[]): MethodDecorator {
   return () => {};
 }

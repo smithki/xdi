@@ -1,7 +1,7 @@
 import { exitAfterCleanup, addCleanupListener, removeCleanupListener } from 'async-cleanup';
 import * as pathToRegExp from 'path-to-regexp';
 
-import type { ServerAdapter } from './adapters/base';
+import type { ServerAdapter } from './adapter';
 import { RouteMetadata } from './decorators/route';
 import { Metadata } from './metadata';
 import { HTTPMethod } from './types';

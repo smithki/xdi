@@ -6,16 +6,25 @@
 - **Supports `global` and `transient`-scoped dependencies.**
 - **Direct upgrade path to [ES decorators](https://github.com/tc39/proposal-decorators).**
 
-| Package                       | Description |
+## Ecosystem
+
+| Packages                      | Description |
 | ----------------------------- | ----------- |
 | [`xdi`](./packages/xdi)       | The meat-and-potatoes of `xdi`. This is what you `npm install` & use. |
 | [`@xdi/react`](./packages/@xdi/react) | React bindings for `xdi` (i.e.: `useService(...)`). |
 | [`@xdi/server`](./packages/@xdi/server) | W.I.P. server framework using XDI dependency injection and declarative, configuration-based routing. |
-| [`@xdi/tsconfig`](./packages/@xdi/tsconfig) | Shared TypeScript configurations. |
 
-| Example                       | Description |
+| Server Adapters                                           | Description |
+| --------------------------------------------------------- | ----------- |
+| [`@xdi/adapter-express`](./packages/@xdi/adapter-express) | ExpressJS adapter for `@xdi/server`. |
+
+| Examples                      | Description |
 | ----------------------------- | ----------- |
 | [`server`](./example/server)  | Work-in-progress "hello world" for `@xdi/server`. |
+
+| Internals                                   | Description |
+| ------------------------------------------- | ----------- |
+| [`@xdi/tsconfig`](./packages/@xdi/tsconfig) | Shared TypeScript toolchains & configurations. |
 
 ## ⚡️ Quick Start
 

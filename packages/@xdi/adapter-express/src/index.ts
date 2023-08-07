@@ -1,10 +1,8 @@
 import type { Server } from 'http';
 import type { Socket } from 'net';
 
+import type { HTTPMethod, ServerAdapter } from '@xdi/server';
 import type express from 'express';
-
-import type { ServerAdapter } from './base';
-import type { HTTPMethod } from '../types';
 
 interface SocketsMap {
   [key: number]: Socket;

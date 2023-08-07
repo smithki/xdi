@@ -1,4 +1,5 @@
-import { route, App, Router, expressAdapter, middleware } from '@xdi/server';
+import { expressAdapter } from '@xdi/adapter-express';
+import { route, App, Router, middleware } from '@xdi/server';
 
 console.log('@xdi/example-server');
 
@@ -17,4 +18,4 @@ const app = new App([router], {
   adapter: expressAdapter,
 });
 
-app.start(3000);
+app.listen(3000);

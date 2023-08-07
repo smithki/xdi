@@ -1,7 +1,3 @@
-// Adapters
-export type { ServerAdapter } from './adapters/base';
-export { expressAdapter } from './adapters/express';
-
 // Decorators
 export { body } from './decorators/body';
 export { context } from './decorators/context';
@@ -18,4 +14,5 @@ export { withMiddleware } from './decorators/with-middleware';
 // Core
 export { App, Router } from './app';
 export { Metadata } from './metadata';
+export type { ServerAdapter } from './adapter';
 export type { HTTPMethod } from './types';

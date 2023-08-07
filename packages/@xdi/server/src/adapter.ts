@@ -9,18 +9,20 @@ export namespace ServerAdapter {
    *
    */
   export interface Implementations {
-    fetch?: typeof fetch;
-    FormData?: typeof FormData;
-    Headers?: typeof Headers;
-    Request?: typeof Request;
-    Response?: typeof Response;
-    AbortController?: typeof AbortController;
+    fetch: typeof fetch;
+    FormData: typeof FormData;
+    Headers: typeof Headers;
+    Request: typeof Request;
+    Response: typeof Response;
+    AbortController: typeof AbortController;
 
-    File?: typeof File;
-    Blob?: typeof Blob;
+    File: typeof File;
+    Blob: typeof Blob;
 
-    atob?: typeof atob;
-    btoa?: typeof btoa;
+    atob: typeof atob;
+    btoa: typeof btoa;
+
+    URL: typeof URL;
   }
 
   /**

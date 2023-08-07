@@ -8,7 +8,7 @@ import { HTTPMethod } from './types';
 
 export namespace App {
   export interface Options extends RouterOptions {
-    adapter: ServerAdapter.AdapterFactory;
+    adapter: ServerAdapter;
   }
 
   export interface RouterOptions {
@@ -31,9 +31,12 @@ export class App {
 
   constructor(private readonly routers: Router[], private readonly options: App.Options) {}
 
+  public get adapter() {
+    return this.options.adapter;
+  }
+
   public async listen(port: number) {
-    const adapter = await this.options.adapter();
-    await adapter.listen(port, this);
+    await this.adapter.listen(port, this);
   }
 
   public async shutdown(code?: number) {
@@ -58,6 +61,14 @@ export class App {
       }
     }
     return matchedRoute;
+  }
+
+  public handleRequest(
+    request: InstanceType<ServerAdapter.Implementations['Request']>,
+    route: App.Route,
+  ): Promise<InstanceType<ServerAdapter.Implementations['Response']>> {
+    // TODO...
+    return {} as any;
   }
 }
 

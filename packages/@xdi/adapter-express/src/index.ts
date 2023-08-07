@@ -12,6 +12,7 @@ export async function expressAdapter(): Promise<ServerAdapter> {
   const { fetch, FormData, Headers, Request, Response } = await import('@remix-run/web-fetch');
   const { File, Blob } = await import('@remix-run/web-file');
   const { AbortController: NodeAbortController } = await import('abort-controller');
+  const { URL } = await import('url');
 
   return {
     global,
@@ -33,6 +34,8 @@ export async function expressAdapter(): Promise<ServerAdapter> {
       btoa(b) {
         return Buffer.from(b, 'binary').toString('base64');
       },
+
+      URL: (global.URL || URL) as any,
     },
 
     async listen(port, app) {
@@ -41,8 +44,25 @@ export async function expressAdapter(): Promise<ServerAdapter> {
 
       expressApp.use(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
         try {
-          const matchedRoute = app.match(req.method as HTTPMethod, req.url);
+          const url = new app.adapter.implementations.URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
+          const matchedRoute = app.match(req.method as HTTPMethod, url.pathname);
           if (matchedRoute) {
+            const headers = new app.adapter.implementations.Headers();
+
+            for (const [key, value] of Object.entries(req.headers)) {
+              if (typeof value === 'string') {
+                headers.set(key, value);
+              }
+            }
+
+            const xdiRequest = new app.adapter.implementations.Request(url, {
+              method: req.method,
+              body: req.body,
+              headers,
+            });
+
+            const xdiResponse = await app.handleRequest(xdiRequest, matchedRoute);
+
             res.status(200).send(`Hello world ${req.method} ${req.url}`);
           } else {
             res.status(404).send('Not found');

@@ -1,3 +1,4 @@
+import { exitAfterCleanup, addCleanupListener, removeCleanupListener } from 'async-cleanup';
 import * as pathToRegExp from 'path-to-regexp';
 
 import type { ServerAdapter } from './adapters/base';
@@ -16,20 +17,36 @@ export namespace App {
   }
 
   export type Route<T = any> = new () => T;
+
+  export interface Shutdown {
+    (status?: number): Promise<never>;
+  }
+  export interface ShutdownTask {
+    (): void | Promise<void>;
+  }
 }
 
 export class App {
-  private _closeServer?: ServerAdapter.ServerClose;
+  public isShuttingDown = false;
 
   constructor(private readonly routers: Router[], private readonly options: App.Options) {}
 
-  async start(port: number) {
+  public async listen(port: number) {
     const adapter = await this.options.adapter();
-    this._closeServer = await adapter.listen(port, this);
+    await adapter.listen(port, this);
   }
 
-  async stop(port: number) {
-    await this._closeServer?.();
+  public async shutdown(code?: number) {
+    this.isShuttingDown = true;
+    return exitAfterCleanup(code);
+  }
+
+  public async addShutdownTask(task: App.ShutdownTask) {
+    addCleanupListener(task);
+  }
+
+  public async removeShutdownTask(task: App.ShutdownTask) {
+    removeCleanupListener(task);
   }
 
   public match(method: HTTPMethod, url: string) {

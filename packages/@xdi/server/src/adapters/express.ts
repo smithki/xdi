@@ -1,9 +1,14 @@
 import type { Server } from 'http';
+import type { Socket } from 'net';
 
 import type express from 'express';
 
 import type { ServerAdapter } from './base';
 import type { HTTPMethod } from '../types';
+
+interface SocketsMap {
+  [key: number]: Socket;
+}
 
 export async function expressAdapter(): Promise<ServerAdapter> {
   const { fetch, FormData, Headers, Request, Response } = await import('@remix-run/web-fetch');
@@ -44,16 +49,6 @@ export async function expressAdapter(): Promise<ServerAdapter> {
           } else {
             res.status(404).send('Not found');
           }
-
-          // TODO: implement...
-          // @see https://github.com/remix-run/remix/blob/main/packages/remix-express/server.ts
-          // let request = createRemixRequest(req, res);
-          // let loadContext = await getLoadContext?.(req, res);
-          // let response = (await handleRequest(
-          //   request,
-          //   loadContext
-          // )) as NodeResponse;
-          // await sendRemixResponse(res, response);
         } catch (err) {
           // Express <=4 doesn't support async functions, so we have to pass
           // along the error manually using next().
@@ -61,14 +56,51 @@ export async function expressAdapter(): Promise<ServerAdapter> {
         }
       });
 
-      let server: Server;
-      await new Promise<void>((resolve) => {
-        server = expressApp.listen(port, resolve);
+      let server: Server | undefined;
+      const connections: SocketsMap = {};
+      let nextConnectionId = 1;
+
+      const IdleSocket = Symbol('IdleSocket');
+      const closeIdleConnection = (connection: Socket) => {
+        if ((connection as any)[IdleSocket]) {
+          connection.destroy();
+        }
+      };
+
+      app.addShutdownTask(() => {
+        if (server) {
+          server.close();
+          for (const connectionId in connections) {
+            // eslint-disable-next-line no-prototype-builtins
+            if (connections.hasOwnProperty(connectionId)) {
+              const socket = connections[connectionId];
+              closeIdleConnection(socket);
+            }
+          }
+        }
       });
 
-      return async () => {
-        server.close();
-      };
+      await new Promise<void>((resolve) => {
+        server = expressApp.listen(port, resolve);
+
+        server.on('connection', (connection) => {
+          const connectionId = nextConnectionId++;
+          (connection as any)[IdleSocket] = true;
+          connections[connectionId] = connection;
+          connection.on('close', () => delete connections[connectionId]);
+        });
+
+        server.on('request', (request, response) => {
+          const connection = request.socket;
+          (connection as any)[IdleSocket] = false;
+          response.on('finish', () => {
+            (connection as any)[IdleSocket] = true;
+            if (app.isShuttingDown) {
+              closeIdleConnection(connection);
+            }
+          });
+        });
+      });
     },
   };
 }

@@ -27,14 +27,7 @@ export namespace ServerAdapter {
    *
    */
   export interface ServerListen {
-    (port: number, app: App): ServerClose | Promise<ServerClose>;
-  }
-
-  /**
-   *
-   */
-  export interface ServerClose {
-    (): void | Promise<void>;
+    (port: number, app: App): void | Promise<void>;
   }
 
   /**

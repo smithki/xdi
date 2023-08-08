@@ -1,5 +1,5 @@
-import { expressAdapter } from '@xdi/adapter-express';
-import { route, App, Router, middleware, handler } from '@xdi/server';
+import { expressAdapter } from '@xdi-server/adapter-express';
+import { route, App, Router, middleware, handler } from '@xdi-server/core';
 
 console.log('@xdi/example-server');
 

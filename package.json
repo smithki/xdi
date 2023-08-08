@@ -4,6 +4,7 @@
   "private": true,
   "workspaces": [
     "packages/@xdi/*",
+    "packages/@xdi-server/*",
     "packages/xdi",
     "examples/*"
   ],

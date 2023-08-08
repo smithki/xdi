@@ -8,19 +8,19 @@
 
 ## Ecosystem
 
-| Packages                      | Description |
+| XDI Packages                  | Description |
 | ----------------------------- | ----------- |
 | [`xdi`](./packages/xdi)       | The meat-and-potatoes of `xdi`. This is what you `npm install` & use. |
 | [`@xdi/react`](./packages/@xdi/react) | React bindings for `xdi` (i.e.: `useService(...)`). |
-| [`@xdi/server`](./packages/@xdi/server) | W.I.P. server framework using XDI dependency injection and declarative, configuration-based routing. |
 
-| Server Adapters                                           | Description |
+| XDI Server Packages                                       | Description |
 | --------------------------------------------------------- | ----------- |
-| [`@xdi/adapter-express`](./packages/@xdi/adapter-express) | ExpressJS adapter for `@xdi/server`. |
+| [`@xdi-server/core`](./packages/@xdi-server/core) | W.I.P. server framework using XDI dependency injection and declarative, configuration-based routing. |
+| [`@xdi-server/adapter-express`](./packages/@xdi-server/adapter-express) | ExpressJS adapter for `@xdi-server/core`. |
 
 | Examples                      | Description |
 | ----------------------------- | ----------- |
-| [`server`](./example/server)  | Work-in-progress "hello world" for `@xdi/server`. |
+| [`server`](./example/server)  | Work-in-progress "hello world" for `@xdi-server/core`. |
 
 | Internals                                   | Description |
 | ------------------------------------------- | ----------- |

@@ -14,6 +14,9 @@ class BarRoute {
   @handler()
   bar() {
     console.log('YOLO');
+    return new Response('Hello world!', {
+      status: 200,
+    });
   }
 }
 

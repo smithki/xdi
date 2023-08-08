@@ -1,7 +1,7 @@
 import type { Server } from 'http';
 import type { Socket } from 'net';
 
-import type { HTTPMethod, ServerAdapter } from '@xdi-server/core';
+import type { ServerAdapter } from '@xdi-server/core';
 import type express from 'express';
 
 interface SocketsMap {
@@ -49,28 +49,25 @@ export async function expressAdapter(): Promise<ServerAdapter> {
       expressApp.use(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
         try {
           const url = new app.adapter.implementations.URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
-          const matchedRoute = app.match(req.method as HTTPMethod, url.pathname);
-          if (matchedRoute) {
-            const headers = new app.adapter.implementations.Headers();
 
-            for (const [key, value] of Object.entries(req.headers)) {
-              if (typeof value === 'string') {
-                headers.set(key, value);
-              }
+          const headers = new app.adapter.implementations.Headers();
+          for (const [key, value] of Object.entries(req.headers)) {
+            if (typeof value === 'string') {
+              headers.set(key, value);
             }
-
-            const xdiRequest = new app.adapter.implementations.Request(url, {
-              method: req.method,
-              body: req.body,
-              headers,
-            });
-
-            const xdiResponse = await app.handleRequest(xdiRequest, matchedRoute);
-
-            res.status(200).send(`Hello world ${req.method} ${req.url}`);
-          } else {
-            res.status(404).send('Not found');
           }
+
+          const xdiRequest = new app.adapter.implementations.Request(url, {
+            method: req.method,
+            body: req.body,
+            headers,
+          });
+
+          const requestManager = app.createRequestManager(xdiRequest);
+          const xdiResponse = await requestManager.getResponse();
+
+          // TODO: response encoding types
+          res.status(xdiResponse.status).send(await xdiResponse.text());
         } catch (err) {
           // Express <=4 doesn't support async functions, so we have to pass
           // along the error manually using next().

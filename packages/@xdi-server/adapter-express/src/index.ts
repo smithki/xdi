@@ -36,6 +36,10 @@ export async function expressAdapter(): Promise<ServerAdapter> {
       },
 
       URL: (global.URL || URL) as any,
+      encodeURI: (global.encodeURI || encodeURI) as any,
+      encodeURIComponent: (global.encodeURIComponent || encodeURIComponent) as any,
+      decodeURI: (global.decodeURI || decodeURI) as any,
+      decodeURIComponent: (global.decodeURIComponent || decodeURIComponent) as any,
     },
 
     async listen(port, app) {

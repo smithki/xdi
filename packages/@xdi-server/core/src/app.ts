@@ -29,10 +29,17 @@ export namespace App {
   }
 }
 
+class AppMetadata extends Metadata<{ app: App }> {}
+
 export class App {
   public isShuttingDown = false;
 
-  constructor(private readonly routers: Router[], private readonly options: App.Options) {}
+  constructor(private readonly routers: Router[], private readonly options: App.Options) {
+    for (const router of routers) {
+      const appMetadata = new AppMetadata(router, { app: this });
+      Metadata.registerOne(appMetadata);
+    }
+  }
 
   public get adapter() {
     return this.options.adapter;
@@ -83,11 +90,10 @@ export class App {
 }
 
 export class Router {
-  constructor(private readonly routes: App.Route[], private readonly options?: App.RouterOptions) {
-    this.routes.forEach((route) => {
-      console.log('RouteMetadata:', Metadata.getRegistry(route).get(RouteMetadata));
-      console.log('HandlerMetadata:', Metadata.getRegistry(route).get(HandlerMetadata));
-    });
+  constructor(private readonly routes: App.Route[], private readonly options?: App.RouterOptions) {}
+
+  private get app(): App | null {
+    return Metadata.getRegistry(this).get(AppMetadata)[0]?.value.app ?? null;
   }
 
   public match(method: HTTPMethod, url: string) {
@@ -96,7 +102,9 @@ export class Router {
       if (!routeMetadata) {
         return false;
       }
-      const matcher = pathToRegExp.match(routeMetadata.pattern /* TODO { encode: encodeURIComponent } */);
+      const matcher = pathToRegExp.match(routeMetadata.pattern, {
+        encode: this.app?.adapter.implementations.encodeURI,
+      });
       return routeMetadata.method.toLowerCase() === method.toLowerCase() && matcher(url);
     });
   }

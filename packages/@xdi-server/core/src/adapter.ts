@@ -19,6 +19,10 @@ export namespace ServerAdapter {
     btoa: typeof btoa;
 
     URL: typeof URL;
+    encodeURI: typeof encodeURI;
+    encodeURIComponent: typeof encodeURIComponent;
+    decodeURI: typeof decodeURI;
+    decodeURIComponent: typeof decodeURIComponent;
   }
 
   /**

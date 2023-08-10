@@ -1,17 +1,17 @@
 import { Metadata } from '../metadata';
 
-export class HandlerMetadata extends Metadata<{
+export class URLMetadata extends Metadata<{
   key: string | symbol;
 }> {}
 
 /**
  *
  */
-export function handler(): MethodDecorator {
+export function url(): PropertyDecorator {
   return (target, propertyKey) => {
     const subject = target.constructor;
     Metadata.register(
-      new HandlerMetadata(subject, {
+      new URLMetadata(subject, {
         key: propertyKey,
       }),
     );

@@ -5,18 +5,15 @@ import * as pathToRegExp from 'path-to-regexp';
 
 import { ServerAdapter } from './adapter';
 import { HandlerMetadata } from './decorators/handler';
+import { RequestMetadata } from './decorators/request';
 import { RouteMetadata } from './decorators/route';
+import { URLMetadata } from './decorators/url';
 import { Metadata } from './metadata';
 import { HTTPMethod } from './types';
 
 export namespace App {
-  export interface Options extends RouterOptions {
+  export interface Options {
     adapter: ServerAdapter;
-  }
-
-  export interface RouterOptions {
-    withConnectMiddleware?: any[];
-    withMiddleware?: any[];
   }
 
   export type Route<T = any> = new () => T;
@@ -26,19 +23,6 @@ export namespace App {
   }
   export interface ShutdownTask {
     (): void | Promise<void>;
-  }
-}
-
-class AppMetadata extends Metadata<{ app: App }> {}
-
-class AppInjected {
-  public static registerApp(app: App, subject: Metadata.Subject) {
-    const appMetadata = new AppMetadata(subject, { app });
-    Metadata.registerOne(appMetadata);
-  }
-
-  protected get app(): App | null {
-    return Metadata.getRegistry(this).get(AppMetadata)[0]?.value.app ?? null;
   }
 }
 
@@ -93,8 +77,21 @@ export class App {
   }
 }
 
+class AppMetadata extends Metadata<{ app: App }> {}
+
+class AppInjected {
+  public static registerApp(app: App, subject: Metadata.Subject) {
+    const appMetadata = new AppMetadata(subject, { app });
+    Metadata.registerOne(appMetadata);
+  }
+
+  protected get app(): App | null {
+    return Metadata.getRegistry(this).get(AppMetadata)[0]?.value.app ?? null;
+  }
+}
+
 export class Router extends AppInjected {
-  constructor(private readonly routes: App.Route[], private readonly options?: App.RouterOptions) {
+  constructor(private readonly routes: App.Route[]) {
     super();
   }
 
@@ -121,6 +118,8 @@ class RequestManager extends AppInjected {
   }
 
   public async getResponse(): Promise<InstanceType<ServerAdapter.Implementations['Response']>> {
+    // --- Initial validations ---------------------------------------------- //
+
     if (!this.app) {
       throw new Error('App not injected'); // TODO: better errors
     }
@@ -132,18 +131,37 @@ class RequestManager extends AppInjected {
       });
     }
 
-    // TODO: instantiate middleware
+    // --- Create route instance -------------------------------------------- //
 
     const routeInstance = new this.route();
 
+    // --- Inject property decorators --------------------------------------- //
+
+    // 1. Inject request
+    const requestMetadata = Metadata.getRegistry(this.route).get(RequestMetadata)[0]?.value;
+    routeInstance[requestMetadata.key] = this.request;
+
+    // 2. Inject request URL
+    const urlMetadata = Metadata.getRegistry(this.route).get(URLMetadata)[0]?.value;
+    routeInstance[urlMetadata.key] = new URL(this.request.url);
+
+    // --- Execute request handler; resolve response ------------------------ //
+
+    // Find handler and get a response.
     const handlerMetadata = Metadata.getRegistry(this.route).get(HandlerMetadata)[0]?.value;
-    const response = routeInstance[handlerMetadata.handlerKey]?.();
+    const response = routeInstance[handlerMetadata.key]?.() as
+      | InstanceType<ServerAdapter.Implementations['Response']>
+      | undefined;
 
     if (!response) {
-      // TODO: more robust fallback reponse
-      return new this.app.adapter.implementations.Response('Ok', {
+      // TODO: more robust fallback reponse (or should this be an error?)
+      return new this.app.adapter.implementations.Response('', {
         status: 200,
       });
+    }
+
+    if (!response.headers.has('Content-Type')) {
+      response.headers.append('Content-Type', 'text/plain');
     }
 
     return response;

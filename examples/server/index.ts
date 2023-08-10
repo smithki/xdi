@@ -1,26 +1,32 @@
 import { expressAdapter } from '@xdi-server/adapter-express';
-import { route, App, Router, middleware, handler } from '@xdi-server/core';
+import { route, App, Router, handler, request, url } from '@xdi-server/core';
 
-console.log('@xdi/example-server');
-
-@middleware()
-@route('POST', '/hello-world2')
-@route('PUT', '/hello-world')
-class FooRoute {}
-
-@middleware()
 @route('GET', '/hello-world')
 class BarRoute {
+  @request()
+  req!: Request;
+
+  @url()
+  url!: URL;
+
   @handler()
   bar() {
-    console.log('YOLO');
-    return new Response('Hello world!', {
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+    });
+
+    const body = JSON.stringify({
+      hello: 'world',
+    });
+
+    return new Response(body, {
+      headers,
       status: 200,
     });
   }
 }
 
-const router = new Router([FooRoute, BarRoute]);
+const router = new Router([BarRoute]);
 
 expressAdapter().then((adapter) => {
   const app = new App([router], { adapter });

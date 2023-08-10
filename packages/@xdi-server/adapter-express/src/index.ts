@@ -66,8 +66,12 @@ export async function expressAdapter(): Promise<ServerAdapter> {
           const requestManager = app.createRequestManager(xdiRequest);
           const xdiResponse = await requestManager.getResponse();
 
-          // TODO: response encoding types
-          res.status(xdiResponse.status).send(await xdiResponse.text());
+          res.status(xdiResponse.status);
+          xdiResponse.headers.forEach((value, header) => {
+            console.log(header, value);
+            res.set(header, value);
+          });
+          res.send(await xdiResponse.text());
         } catch (err) {
           // Express <=4 doesn't support async functions, so we have to pass
           // along the error manually using next().

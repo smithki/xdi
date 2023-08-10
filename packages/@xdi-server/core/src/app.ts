@@ -8,6 +8,7 @@ import { HandlerMetadata } from './decorators/handler';
 import { RequestMetadata } from './decorators/request';
 import { RouteMetadata } from './decorators/route';
 import { URLMetadata } from './decorators/url';
+import { createError } from './exceptions';
 import { Metadata } from './metadata';
 import { HTTPMethod } from './types';
 
@@ -121,14 +122,11 @@ class RequestManager extends AppInjected {
     // --- Initial validations ---------------------------------------------- //
 
     if (!this.app) {
-      throw new Error('App not injected'); // TODO: better errors
+      throw new createError.InternalServerError('App not injected');
     }
 
     if (!this.route) {
-      // TODO: more robust 404
-      return new this.app.adapter.implementations.Response('Not found', {
-        status: 404,
-      });
+      throw new createError.NotFound();
     }
 
     // --- Create route instance -------------------------------------------- //

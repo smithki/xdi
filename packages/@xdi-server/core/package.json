@@ -21,6 +21,7 @@
     "@xdi/tsconfig": "*",
     "abort-controller": "~3.0.0",
     "async-cleanup": "~1.0.0",
+    "http-errors": "~2.0.0",
     "path-to-regexp": "~6.2.1"
   }
 }
